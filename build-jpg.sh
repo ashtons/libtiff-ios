@@ -1,5 +1,5 @@
 #!/bin/sh
-c
+#Based on original script found at http://pastebin.com/Pgiy3rYJ
 
 GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
