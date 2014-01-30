@@ -75,6 +75,19 @@ export CFLAGS="-arch arm64 -pipe -no-cpp-precomp -isysroot $SDKROOT -miphoneos-v
 
 setenv_all
 }
+
+setenv_x86_64()
+{
+unset DEVROOT SDKROOT CFLAGS CC LD CPP CXX AR AS NM CXXCPP RANLIB LDFLAGS CPPFLAGS CXXFLAGS
+
+export DEVROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer
+export SDKROOT=$DEVROOT/SDKs/iPhoneSimulator$IOS_BASE_SDK.sdk
+
+export CFLAGS="-arch x86_64 -pipe -no-cpp-precomp -isysroot $SDKROOT -miphoneos-version-min=$IOS_DEPLOY_TGT"
+
+setenv_all
+}
+
 create_outdir_lipo()
 {
 echo "create_outdir_lipo"
@@ -82,8 +95,9 @@ for lib_i386 in `find $LOCAL_OUTDIR/i386 -name "lib*\.a"`; do
 lib_armv7=`echo $lib_i386 | sed "s/i386/armv7/g"`
 lib_armv7s=`echo $lib_i386 | sed "s/i386/armv7s/g"`
 lib_arm64=`echo $lib_i386 | sed "s/i386/arm64/g"`
+lib_x86_64=`echo $lib_i386 | sed "s/i386/x86_64/g"`
 lib=`echo $lib_i386 | sed "s/i386//g"`
-${LIPO} -arch armv7 $lib_armv7 -arch armv7s $lib_armv7s -arch arm64 $lib_arm64 -arch i386 $lib_i386 -create -output $lib
+${LIPO} -arch armv7 $lib_armv7 -arch armv7s $lib_armv7s -arch arm64 $lib_arm64 -arch i386 $lib_i386 -arch x86_64 $lib_x86_64 -create -output $lib
 done
 }
 
@@ -134,6 +148,17 @@ echo "SETENV_ARM64"
 setenv_arm64
 echo "CONFIGURE"
 ./configure --host=arm-apple-darwin7 --enable-shared=no --prefix=`pwd`/$LOCAL_OUTDIR/arm64
+echo "MAKE"
+make -j4
+echo "MAKE INSTALL"
+make install
+
+make clean 2> /dev/null
+make distclean 2> /dev/null
+echo "SETENV_x86_64"
+setenv_x86_64
+echo "CONFIGURE"
+./configure --host=arm-apple-darwin7 --enable-shared=no --prefix=`pwd`/$LOCAL_OUTDIR/x86_64
 echo "MAKE"
 make -j4
 echo "MAKE INSTALL"
