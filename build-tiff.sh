@@ -7,7 +7,7 @@ TIFF_LIB="`pwd`/tiff-4.0.3"
 JPEG_INC="`pwd`/dependencies/include"
 JPEG_LIB="`pwd`/dependencies/lib"
 
-IOS_BASE_SDK="7.0"
+IOS_BASE_SDK="7.1"
 IOS_DEPLOY_TGT="5.1"
 LIPO="xcrun -sdk iphoneos lipo"
 
