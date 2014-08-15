@@ -5,7 +5,7 @@ GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
 JPEG_LIB="`pwd`/jpeg-9"
 
-IOS_BASE_SDK="7.0"
+IOS_BASE_SDK="7.1"
 IOS_DEPLOY_TGT="5.1"
 LIPO="xcrun -sdk iphoneos lipo"
 
