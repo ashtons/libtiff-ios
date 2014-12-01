@@ -5,8 +5,8 @@ GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
 PNG_LIB="`pwd`/libpng-1.6.9"
 
-IOS_BASE_SDK="7.1"
-IOS_DEPLOY_TGT="5.1"
+IOS_BASE_SDK="8.1"
+IOS_DEPLOY_TGT="7.0"
 LIPO="xcrun -sdk iphoneos lipo"
 
 setenv_all()
