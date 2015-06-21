@@ -3,7 +3,7 @@
 
 GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
-TIFF_LIB="`pwd`/tiff-4.0.3"
+TIFF_LIB="`pwd`/tiff-4.0.4"
 JPEG_INC="`pwd`/dependencies/include"
 JPEG_LIB="`pwd`/dependencies/lib"
 
