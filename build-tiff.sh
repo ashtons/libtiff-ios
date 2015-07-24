@@ -7,14 +7,14 @@ TIFF_LIB="`pwd`/tiff-4.0.4"
 JPEG_INC="`pwd`/dependencies/include"
 JPEG_LIB="`pwd`/dependencies/lib"
 
-IOS_BASE_SDK="8.4"
+IOS_BASE_SDK="9.0"
 IOS_DEPLOY_TGT="7.0"
 LIPO="xcrun -sdk iphoneos lipo"
 
 setenv_all()
 {
 # Add internal libs
-export CFLAGS="-O2 $CFLAGS -I$GLOBAL_OUTDIR/include -L$GLOBAL_OUTDIR/lib"
+export CFLAGS="-O2 $CFLAGS -I$GLOBAL_OUTDIR/include -L$GLOBAL_OUTDIR/lib -fembed-bitcode"
 
 export CXX=`xcrun -find -sdk iphoneos clang++`
 export CC=`xcrun -find -sdk iphoneos clang`
