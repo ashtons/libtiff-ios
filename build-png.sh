@@ -5,14 +5,14 @@ GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
 PNG_LIB="`pwd`/libpng-1.6.17"
 
-IOS_BASE_SDK="8.4"
+IOS_BASE_SDK="9.0"
 IOS_DEPLOY_TGT="7.0"
 LIPO="xcrun -sdk iphoneos lipo"
 
 setenv_all()
 {
 # Add internal libs
-export CFLAGS="-O2 $CFLAGS -I$GLOBAL_OUTDIR/include -L$GLOBAL_OUTDIR/lib"
+export CFLAGS="-O2 $CFLAGS -I$GLOBAL_OUTDIR/include -L$GLOBAL_OUTDIR/lib -fembed-bitcode"
 
 export CXX=`xcrun -find -sdk iphoneos clang++`
 export CC=`xcrun -find -sdk iphoneos clang`
