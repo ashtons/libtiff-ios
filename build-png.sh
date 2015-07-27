@@ -3,7 +3,7 @@
 
 GLOBAL_OUTDIR="`pwd`/dependencies"
 LOCAL_OUTDIR="./outdir"
-PNG_LIB="`pwd`/libpng-1.6.17"
+PNG_LIB="`pwd`/libpng-1.6.18"
 
 IOS_BASE_SDK="8.4"
 IOS_DEPLOY_TGT="7.0"
