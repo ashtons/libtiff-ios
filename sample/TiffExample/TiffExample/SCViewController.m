@@ -21,7 +21,7 @@
 	NSString *tifFilePath = [[NSBundle mainBundle] pathForResource:@"example" ofType:@"tif"];
     if (tifFilePath) {
         NSInteger frames = [TiffUtils numberOfFramesInFile:tifFilePath];
-        NSLog(@"There are %ld frames in the file", frames);
+        NSLog(@"There are %ld frames in the file", (long)frames);
     }
     
 }
