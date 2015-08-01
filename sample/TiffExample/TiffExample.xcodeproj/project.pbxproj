@@ -482,7 +482,7 @@
 				INFOPLIST_FILE = "TiffExample/TiffExample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Volumes/DataDisk/Sean/src/libtiff-ios/sample/TiffExample/TiffExample/Libraries/libtiff/lib",
+					$SRCROOT/TiffExample/Libraries/libtiff/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -499,7 +499,7 @@
 				INFOPLIST_FILE = "TiffExample/TiffExample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Volumes/DataDisk/Sean/src/libtiff-ios/sample/TiffExample/TiffExample/Libraries/libtiff/lib",
+					$SRCROOT/TiffExample/Libraries/libtiff/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -567,6 +567,7 @@
 				C6648979189AFE4200510775 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C664897A189AFE4200510775 /* Build configuration list for PBXNativeTarget "TiffExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -575,6 +576,7 @@
 				C664897C189AFE4200510775 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
