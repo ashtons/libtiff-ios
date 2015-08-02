@@ -11,3 +11,6 @@ Creates fat binary libraries compatible with i386/Simulator,x86_64, arm64, armv7
     ./build-jpg.sh
     ./build-tiff.sh
     ./build-png.sh
+    
+
+Use iOS 9 branch for XCode 7 and bitcode support
