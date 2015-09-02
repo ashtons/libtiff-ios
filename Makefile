@@ -20,7 +20,7 @@ LIB_FAT_DIR   = $(shell pwd)/dependencies/lib
 
 libpngfiles = libpng.a
 libjpegfiles = libjpeg.a
-libtifffiles = libtiff.a
+libtifffiles = libtiff.a libtiffxx.a
 
 sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH) $(SDK_IPHONESIMULATOR_PATH)
 archs = armv7 armv7s arm64 i386 x86_64
