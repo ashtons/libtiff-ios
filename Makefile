@@ -193,4 +193,3 @@ mostlycleanjpeg :
 distclean :
 	-rm -rf $(IMAGE_LIB_DIR)
 	-rm -rf $(IMAGE_INC_DIR)
-	-rm -rf $(IMAGE_SRC)
