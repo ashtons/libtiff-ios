@@ -23,12 +23,18 @@ libjpegfiles = libjpeg.a
 libtifffiles = libtiff.a libtiffxx.a
 
 sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH) $(SDK_IPHONESIMULATOR_PATH)
-archs = armv7 armv7s arm64 i386 x86_64
-arch_names = arm-apple-darwin7 arm-apple-darwin7s arm-apple-darwin64 i386-apple-darwin x86_64-apple-darwin
+archs_all = armv7 armv7s arm64 i386 x86_64
+arch_names_all = arm-apple-darwin7 arm-apple-darwin7s arm-apple-darwin64 i386-apple-darwin x86_64-apple-darwin
+arch_names = $(foreach arch, $(ARCHS), $(call swap, $(arch), $(archs_all), $(arch_names_all) ) )
+ARCHS ?= $(archs_all)
 
 libpngfolders  = $(foreach arch, $(arch_names), $(PNG_SRC)/$(arch)/)
 libjpegfolders = $(foreach arch, $(arch_names), $(JPEG_SRC)/$(arch)/)
 libtifffolders = $(foreach arch, $(arch_names), $(TIFF_SRC)/$(arch)/)
+
+libpngfolders_all  = $(foreach arch, $(arch_names_all), $(PNG_SRC)/$(arch)/)
+libjpegfolders_all = $(foreach arch, $(arch_names_all), $(JPEG_SRC)/$(arch)/)
+libtifffolders_all = $(foreach arch, $(arch_names_all), $(TIFF_SRC)/$(arch)/)
 
 libpngmakefile  = $(foreach folder, $(libpngfolders), $(addprefix $(folder), Makefile) )
 libjpegmakefile = $(foreach folder, $(libjpegfolders), $(addprefix $(folder), Makefile) )
@@ -61,7 +67,7 @@ libtiff : $(libtifffat)
 
 $(libtifffat) : $(libtiff)
 	mkdir -p $(@D)
-	xcrun lipo $(addsuffix lib/$(@F), $(libtifffolders)) -create -output $@
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libtifffolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
 	cp -rvf $(firstword $(libtifffolders))/include/*.h $(IMAGE_INC_DIR)
 
@@ -70,8 +76,8 @@ $(libtiff) :  $(libtiffmakefile)
 	$(MAKE) -sj8 && $(MAKE) install
 
 $(TIFF_SRC)/%/Makefile : $(libtiffconfig)
-	export SDKROOT="$(call swap, $*, $(arch_names), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names), $(archs)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -82,7 +88,7 @@ libpng : $(libpngfat)
 
 $(libpngfat) : $(libpng)
 	mkdir -p $(@D)
-	xcrun lipo $(addsuffix lib/$(@F), $(libpngfolders)) -create -output $@
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libpngfolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
 	cp -rvf $(firstword $(libpngfolders))/include/*.h $(IMAGE_INC_DIR)
 
@@ -91,8 +97,8 @@ $(libpng) : $(libpngmakefile)
 	$(MAKE) -sj8 && $(MAKE) install
 
 $(PNG_SRC)/%/Makefile : $(libpngconfig)
-	export SDKROOT="$(call swap, $*, $(arch_names), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names), $(archs)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -103,7 +109,7 @@ libjpeg : $(libjpegfat)
 
 $(libjpegfat) : $(libjpeg)
 	mkdir -p $(@D)
-	xcrun lipo $(addsuffix lib/$(@F), $(libjpegfolders)) -create -output $@
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libjpegfolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
 	cp -rvf $(firstword $(libjpegfolders))/include/*.h $(IMAGE_INC_DIR)
 
@@ -112,8 +118,8 @@ $(libjpeg) : $(libjpegmakefile)
 	$(MAKE) -sj8 && $(MAKE) install
 
 $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
-	export SDKROOT="$(call swap, $*, $(arch_names), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names), $(archs)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -140,29 +146,23 @@ clean : cleanpng cleantiff cleanjpeg
 
 .PHONY : cleanpng
 cleanpng :
-	for folder in $(libpngfolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) clean; \
-		fi; \
+	for folder in $(realpath $(libpngfolders_all) ); do \
+        cd $$folder; \
+        $(MAKE) clean; \
 	done
 
 .PHONY : cleanjpeg
 cleanjpeg :
-	for folder in $(libjpegfolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) clean; \
-		fi; \
+	for folder in $(realpath $(libjpegfolders_all) ); do \
+        cd $$folder; \
+        $(MAKE) clean; \
 	done
 
 .PHONY : cleantiff
 cleantiff :
-	for folder in $(libtifffolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) clean; \
-		fi; \
+	for folder in $(realpath $(libtifffolders_all) ); do \
+        cd $$folder; \
+        $(MAKE) clean; \
     done
 
 .PHONY : mostlyclean
@@ -170,34 +170,29 @@ mostlyclean : mostlycleanpng mostlycleantiff mostlycleanjpeg
 
 .PHONY : mostlycleanpng
 mostlycleanpng :
-	for folder in $(libpngfolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) mostlyclean; \
-		fi; \
+	for folder in $(realpath $(libpngfolders) ); do \
+        cd $$folder; \
+        $(MAKE) mostlyclean; \
     done
 
 .PHONY : mostlycleantiff
 mostlycleantiff :
-	for folder in $(libtifffolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) mostlyclean; \
-		fi; \
+	for folder in $(realpath $(libtifffolders_all) ); do \
+        cd $$folder; \
+        $(MAKE) mostlyclean; \
 	done
 
 .PHONY : mostlycleanjpeg
 mostlycleanjpeg :
-	for folder in $(libjpegfolders); do \
-		if [ -d $$folder ]; then \
-			cd $$folder; \
-			$(MAKE) mostlyclean; \
-		fi; \
+	for folder in $(realpath $(libjpegfolders_all) ); do \
+        cd $$folder; \
+        $(MAKE) mostlyclean; \
     done
 
 .PHONY : distclean
-distcleanimage :
+distclean :
 	-rm -rf $(IMAGE_LIB_DIR)
 	-rm -rf $(IMAGE_INC_DIR)
-	-rm -rf $(IMAGE_SRC)
-
+	-rm -rf $(PNG_SRC)
+	-rm -rf $(JPEG_SRC)
+	-rm -rf $(TIFF_SRC)
