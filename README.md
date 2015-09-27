@@ -6,7 +6,7 @@ and the idea from [Tesseract-OCR-iOS Makefile] (https://github.com/gali8/Tessera
 
 Compile libTIFF, libPNG and JPEG libraries for use on iOS
 
-Creates fat binary libraries compatible with i386/Simulator,x86_64, arm64, armv7 and armv7s 
+Creates "fat" binary libraries compatible with i386/Simulator, x86_64, arm64, armv7 and armv7s 
 
     make            #builds all libraries
 
@@ -15,6 +15,10 @@ You may also build only the library you wish by specifiying the following make t
     make libtiff
     make libpng
     make libjpg
+
+By default every "fat" library will contain all architectures specified above. So it can be linked with apps either for devices or simulator. If you don't need all architectures above (for example, for AppStore submittion), just specify the necessary architectures in the `ARCHS` environement variable as follows:
+
+    export ARCHS=armv7, armv7s, arm64
 
 It's much easier now to update to a any (new or old) versions of library: just change a corresponding version numbers in the beginning of the make file:
 
