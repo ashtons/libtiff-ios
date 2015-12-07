@@ -1,7 +1,7 @@
-PNG_NAME        = libpng-1.6.18
-JPEG_SRC_NAME   = jpegsrc.v9a# filename at the server
-JPEG_DIR_NAME   = jpeg-9a# folder name after the JPEG_SRC_NAME archive has been unpacked
-TIFF_NAME       = tiff-4.0.4
+PNG_NAME        := libpng-1.6.20
+JPEG_SRC_NAME   := jpegsrc.v9a# filename at the server
+JPEG_DIR_NAME   := jpeg-9a# folder name after the JPEG_SRC_NAME archive has been unpacked
+TIFF_NAME       := tiff-4.0.4
 
 SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
 SDK_IPHONESIMULATOR_PATH=$(shell xcrun --sdk iphonesimulator --show-sdk-path)
@@ -77,7 +77,7 @@ $(libtiff) :  $(libtiffmakefile)
 
 $(TIFF_SRC)/%/Makefile : $(libtiffconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -98,7 +98,7 @@ $(libpng) : $(libpngmakefile)
 
 $(PNG_SRC)/%/Makefile : $(libpngconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -119,7 +119,7 @@ $(libjpeg) : $(libjpegmakefile)
 
 $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -miphoneos-version-min=$(IOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
