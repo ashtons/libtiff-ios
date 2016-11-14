@@ -130,7 +130,7 @@ $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
 # Download sources
 #######################
 $(libtiffconfig) :
-	curl ftp://ftp.remotesensing.org/pub/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
+	curl ftp://downloads.osgeo.org/pub/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
 
 $(libjpegconfig) :
 	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
