@@ -1,7 +1,7 @@
-PNG_NAME        := libpng-1.6.28
+PNG_NAME        := libpng-1.6.29
 JPEG_SRC_NAME   := jpegsrc.v9a# filename at the server
 JPEG_DIR_NAME   := jpeg-9a# folder name after the JPEG_SRC_NAME archive has been unpacked
-TIFF_NAME       := tiff-4.0.7
+TIFF_NAME       := tiff-4.0.8
 
 SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
 SDK_IPHONESIMULATOR_PATH=$(shell xcrun --sdk iphonesimulator --show-sdk-path)
