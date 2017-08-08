@@ -1,4 +1,4 @@
-PNG_NAME        := libpng-1.6.29
+PNG_NAME        := libpng-1.6.31
 JPEG_SRC_NAME   := jpegsrc.v9a# filename at the server
 JPEG_DIR_NAME   := jpeg-9a# folder name after the JPEG_SRC_NAME archive has been unpacked
 TIFF_NAME       := tiff-4.0.8
@@ -130,13 +130,13 @@ $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
 # Download sources
 #######################
 $(libtiffconfig) :
-	curl ftp://downloads.osgeo.org/pub/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
+	curl http://download.osgeo.org/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
 
 $(libjpegconfig) :
 	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
 
 $(libpngconfig) :
-	curl ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
+	curl https://ftp-osl.osuosl.org//pub/libpng/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
 
 #######################
 # Clean
