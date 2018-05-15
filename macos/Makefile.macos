@@ -66,77 +66,77 @@ all : $(dependant_libs)
 libtiff : $(libtifffat)
 
 $(libtifffat) : $(libtiff)
-  mkdir -p $(@D)
-  xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libtifffolders_all)) ) -create -output $@
-  mkdir -p $(IMAGE_INC_DIR)
-  cp -rvf $(firstword $(libtifffolders))/include/*.h $(IMAGE_INC_DIR)
+	mkdir -p $(@D)
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libtifffolders_all)) ) -create -output $@
+	mkdir -p $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libtifffolders))/include/*.h $(IMAGE_INC_DIR)
 
 $(libtiff) :  $(libtiffmakefile)
-  cd $(abspath $(@D)/..) ; \
-  $(MAKE) -sj8 && $(MAKE) install
+	cd $(abspath $(@D)/..) ; \
+	$(MAKE) -sj8 && $(MAKE) install
 
 $(TIFF_SRC)/%/Makefile : $(libtiffconfig)
-  export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-  export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
-  export CPPFLAGS=$$CFLAGS ; \
-  export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
-  mkdir -p $(@D) ; \
-  cd $(@D) ; \
-  ../configure --host=$* --enable-fast-install --enable-shared=no --prefix=`pwd` --without-x --with-jpeg-include-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/include) --with-jpeg-lib-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/lib)
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CPPFLAGS=$$CFLAGS ; \
+	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	mkdir -p $(@D) ; \
+	cd $(@D) ; \
+	../configure --host=$* --enable-fast-install --enable-shared=no --prefix=`pwd` --without-x --with-jpeg-include-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/include) --with-jpeg-lib-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/lib)
 
 libpng : $(libpngfat)
 
 $(libpngfat) : $(libpng)
-  mkdir -p $(@D)
-  xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libpngfolders_all)) ) -create -output $@
-  mkdir -p $(IMAGE_INC_DIR)
-  cp -rvf $(firstword $(libpngfolders))/include/*.h $(IMAGE_INC_DIR)
+	mkdir -p $(@D)
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libpngfolders_all)) ) -create -output $@
+	mkdir -p $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libpngfolders))/include/*.h $(IMAGE_INC_DIR)
 
 $(libpng) : $(libpngmakefile)
-  cd $(abspath $(@D)/..) ; \
-  $(MAKE) -sj8 && $(MAKE) install
+	cd $(abspath $(@D)/..) ; \
+	$(MAKE) -sj8 && $(MAKE) install
 
 $(PNG_SRC)/%/Makefile : $(libpngconfig)
-  export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-  export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
-  export CPPFLAGS=$$CFLAGS ; \
-  export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
-  mkdir -p $(@D) ; \
-  cd $(@D) ; \
-  ../configure --host=$* --enable-shared=no --prefix=`pwd`
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CPPFLAGS=$$CFLAGS ; \
+	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	mkdir -p $(@D) ; \
+	cd $(@D) ; \
+	../configure --host=$* --enable-shared=no --prefix=`pwd`
 
 libjpeg : $(libjpegfat)
 
 $(libjpegfat) : $(libjpeg)
-  mkdir -p $(@D)
-  xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libjpegfolders_all)) ) -create -output $@
-  mkdir -p $(IMAGE_INC_DIR)
-  cp -rvf $(firstword $(libjpegfolders))/include/*.h $(IMAGE_INC_DIR)
+	mkdir -p $(@D)
+	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libjpegfolders_all)) ) -create -output $@
+	mkdir -p $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libjpegfolders))/include/*.h $(IMAGE_INC_DIR)
 
 $(libjpeg) : $(libjpegmakefile)
-  cd $(abspath $(@D)/..) ; \
-  $(MAKE) -sj8 && $(MAKE) install
+	cd $(abspath $(@D)/..) ; \
+	$(MAKE) -sj8 && $(MAKE) install
 
 $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
-  export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-  export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
-  export CPPFLAGS=$$CFLAGS ; \
-  export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
-  mkdir -p $(@D) ; \
-  cd $(@D) ; \
-  ../configure --host=$* --enable-shared=no --prefix=`pwd`
+	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CPPFLAGS=$$CFLAGS ; \
+	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	mkdir -p $(@D) ; \
+	cd $(@D) ; \
+	../configure --host=$* --enable-shared=no --prefix=`pwd`
 
 #######################
 # Download sources
 #######################
 $(libtiffconfig) :
-  curl ftp://download.osgeo.org/pub/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
+	curl http://download.osgeo.org/libtiff/$(TIFF_NAME).tar.gz | tar -xpf-
 
 $(libjpegconfig) :
-  curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
+	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
 
 $(libpngconfig) :
-  curl ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
+	curl ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
 
 #######################
 # Clean
@@ -146,53 +146,53 @@ clean : cleanpng cleantiff cleanjpeg
 
 .PHONY : cleanpng
 cleanpng :
-  for folder in $(realpath $(libpngfolders_all) ); do \
-        cd $$folder; \
-        $(MAKE) clean; \
-  done
+	for folder in $(realpath $(libpngfolders_all) ); do \
+				cd $$folder; \
+				$(MAKE) clean; \
+	done
 
 .PHONY : cleanjpeg
 cleanjpeg :
-  for folder in $(realpath $(libjpegfolders_all) ); do \
-        cd $$folder; \
-        $(MAKE) clean; \
-  done
+	for folder in $(realpath $(libjpegfolders_all) ); do \
+				cd $$folder; \
+				$(MAKE) clean; \
+	done
 
 .PHONY : cleantiff
 cleantiff :
-  for folder in $(realpath $(libtifffolders_all) ); do \
-        cd $$folder; \
-        $(MAKE) clean; \
-    done
+	for folder in $(realpath $(libtifffolders_all) ); do \
+				cd $$folder; \
+				$(MAKE) clean; \
+		done
 
 .PHONY : mostlyclean
 mostlyclean : mostlycleanpng mostlycleantiff mostlycleanjpeg
 
 .PHONY : mostlycleanpng
 mostlycleanpng :
-  for folder in $(realpath $(libpngfolders) ); do \
-        cd $$folder; \
-        $(MAKE) mostlyclean; \
-    done
+	for folder in $(realpath $(libpngfolders) ); do \
+				cd $$folder; \
+				$(MAKE) mostlyclean; \
+		done
 
 .PHONY : mostlycleantiff
 mostlycleantiff :
-  for folder in $(realpath $(libtifffolders_all) ); do \
-        cd $$folder; \
-        $(MAKE) mostlyclean; \
-  done
+	for folder in $(realpath $(libtifffolders_all) ); do \
+				cd $$folder; \
+				$(MAKE) mostlyclean; \
+	done
 
 .PHONY : mostlycleanjpeg
 mostlycleanjpeg :
-  for folder in $(realpath $(libjpegfolders_all) ); do \
-        cd $$folder; \
-        $(MAKE) mostlyclean; \
-    done
+	for folder in $(realpath $(libjpegfolders_all) ); do \
+				cd $$folder; \
+				$(MAKE) mostlyclean; \
+		done
 
 .PHONY : distclean
 distclean :
-  -rm -rf $(IMAGE_LIB_DIR)
-  -rm -rf $(IMAGE_INC_DIR)
-  -rm -rf $(PNG_SRC)
-  -rm -rf $(JPEG_SRC)
-  -rm -rf $(TIFF_SRC)
+	-rm -rf $(IMAGE_LIB_DIR)
+	-rm -rf $(IMAGE_INC_DIR)
+	-rm -rf $(PNG_SRC)
+	-rm -rf $(JPEG_SRC)
+	-rm -rf $(TIFF_SRC)
