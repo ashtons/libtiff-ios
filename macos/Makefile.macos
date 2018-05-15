@@ -4,6 +4,7 @@ JPEG_SRC_NAME   := jpegsrc.v9c
 JPEG_DIR_NAME   := jpeg-9c
 TIFF_NAME       := tiff-4.0.9
 
+PLATFORM_PREFIX=macos
 SDK_MACOS_PATH=$(shell xcrun --sdk macosx --show-sdk-path)
 XCODE_DEVELOPER_PATH=/Applications/Xcode.app/Contents/Developer
 XCODETOOLCHAIN_PATH=$(XCODE_DEVELOPER_PATH)/Toolchains/XcodeDefault.xctoolchain
@@ -14,9 +15,9 @@ PNG_SRC   = $(IMAGE_SRC)/$(PNG_NAME)
 JPEG_SRC = $(IMAGE_SRC)/$(JPEG_DIR_NAME)
 TIFF_SRC = $(IMAGE_SRC)/$(TIFF_NAME)
 
-IMAGE_LIB_DIR = $(shell pwd)/dependencies/macos/lib/
-IMAGE_INC_DIR = $(shell pwd)/dependencies/macos/include/
-LIB_FAT_DIR   = $(shell pwd)/dependencies/macos/lib
+IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
+IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
+LIB_FAT_DIR   = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib
 
 libpngfiles = libpng.a
 libjpegfiles = libjpeg.a
@@ -61,7 +62,7 @@ dependant_libs = libpng libjpeg libtiff
 all : $(dependant_libs)
 
 #######################
-# Build libtiff and all of it's dependencies
+# Build libtiff and all of its dependencies
 #######################
 libtiff : $(libtifffat)
 

@@ -63,7 +63,7 @@ dependant_libs = libpng libjpeg libtiff
 all : $(dependant_libs)
 
 #######################
-# Build libtiff and all of it's dependencies
+# Build libtiff and all of its dependencies
 #######################
 libtiff : $(libtifffat)
 
