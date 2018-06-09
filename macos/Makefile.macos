@@ -17,7 +17,6 @@ TIFF_SRC = $(IMAGE_SRC)/$(TIFF_NAME)
 
 IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
 IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
-LIB_FAT_DIR   = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib
 
 libpngfiles = libpng.a
 libjpegfiles = libjpeg.a
