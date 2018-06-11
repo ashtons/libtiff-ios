@@ -4,27 +4,54 @@ JPEG_SRC_NAME   := jpegsrc.v9c
 JPEG_DIR_NAME   := jpeg-9c
 TIFF_NAME       := tiff-4.0.9
 
-PLATFORM_PREFIX=macos
-SDK_MACOS_PATH=$(shell xcrun --sdk macosx --show-sdk-path)
-XCODE_DEVELOPER_PATH=/Applications/Xcode.app/Contents/Developer
+XCODE_DEVELOPER_PATH="`xcode-select -p`"
 XCODETOOLCHAIN_PATH=$(XCODE_DEVELOPER_PATH)/Toolchains/XcodeDefault.xctoolchain
-MACOS_DEPLOY_TGT="10.13"
 
 IMAGE_SRC = $(shell pwd)
 PNG_SRC   = $(IMAGE_SRC)/$(PNG_NAME)
 JPEG_SRC = $(IMAGE_SRC)/$(JPEG_DIR_NAME)
 TIFF_SRC = $(IMAGE_SRC)/$(TIFF_NAME)
 
-IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
-IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
-
 libpngfiles = libpng.a
 libjpegfiles = libjpeg.a
 libtifffiles = libtiff.a libtiffxx.a
 
-sdks = $(SDK_MACOS_PATH) $(SDK_MACOS_PATH)
-archs_all = i386 x86_64
-arch_names_all = i386-apple-darwin x86_64-apple-darwin
+libpngconfig  = $(PNG_SRC)/configure
+libjpegconfig = $(JPEG_SRC)/configure
+libtiffconfig = $(TIFF_SRC)/configure
+
+index = $(words $(shell a="$(2)";echo $${a/$(1)*/$(1)} ))
+swap  = $(word $(call index,$(1),$(2)),$(3))
+
+ifeq ($(platform), ios)
+	PLATFORM_PREFIX=ios
+	SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
+	SDK_IPHONESIMULATOR_PATH=$(shell xcrun --sdk iphonesimulator --show-sdk-path)
+	IOS_DEPLOY_TGT="8.0"
+	PLATFORM_VERSION_MIN=iphoneos-version-min=$(IOS_DEPLOY_TGT)
+
+	sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH) $(SDK_IPHONESIMULATOR_PATH)
+	archs_all = armv7 armv7s arm64 i386 x86_64
+	arch_names_all = arm-apple-darwin7 arm-apple-darwin7s arm-apple-darwin64 i386-apple-darwin x86_64-apple-darwin
+else ifeq ($(platform), macos)
+	PLATFORM_PREFIX=macos
+	SDK_MACOS_PATH=$(shell xcrun --sdk macosx --show-sdk-path)
+	MACOS_DEPLOY_TGT="10.13"
+	PLATFORM_VERSION_MIN=macosx-version-min=$(MACOS_DEPLOY_TGT)
+
+	sdks = $(SDK_MACOS_PATH) $(SDK_MACOS_PATH)
+	archs_all = i386 x86_64
+	arch_names_all = i386-apple-darwin x86_64-apple-darwin
+else ifeq ($(platform), all)
+	# we will call make for all platforms, so nothing to do for now
+endif
+
+# TODO: Maybe swap dependencies and PLATFORM_PREFIX
+# TODO: What is random lib directory inside dependencies
+# TODO: Remove ios and macos directories
+IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
+IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
+
 arch_names = $(foreach arch, $(ARCHS), $(call swap, $(arch), $(archs_all), $(arch_names_all) ) )
 ARCHS ?= $(archs_all)
 
@@ -48,17 +75,17 @@ libpng     = $(foreach folder, $(libpngfolders), $(addprefix $(folder)/lib/, $(l
 libjpeg    = $(foreach folder, $(libjpegfolders), $(addprefix $(folder)/lib/, $(libjpegfiles)) )
 libtiff    = $(foreach folder, $(libtifffolders), $(addprefix $(folder)/lib/, $(libtifffiles)) )
 
-libpngconfig  = $(PNG_SRC)/configure
-libjpegconfig = $(JPEG_SRC)/configure
-libtiffconfig = $(TIFF_SRC)/configure
-
-index = $(words $(shell a="$(2)";echo $${a/$(1)*/$(1)} ))
-swap  = $(word $(call index,$(1),$(2)),$(3))
-
 dependant_libs = libpng libjpeg libtiff
 
+ifneq (,$(filter $(platform),ios macos))
 .PHONY : all
 all : $(dependant_libs)
+else
+.PHONY : all
+all :
+	$(MAKE) platform=ios
+	$(MAKE) platform=macos
+endif
 
 #######################
 # Build libtiff and all of its dependencies
@@ -77,7 +104,7 @@ $(libtiff) :  $(libtiffmakefile)
 
 $(TIFF_SRC)/%/Makefile : $(libtiffconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -98,7 +125,7 @@ $(libpng) : $(libpngmakefile)
 
 $(PNG_SRC)/%/Makefile : $(libpngconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -119,7 +146,7 @@ $(libjpeg) : $(libjpegmakefile)
 
 $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -mmacosx-version-min=$(MACOS_DEPLOY_TGT) -O2 -fembed-bitcode" ; \
+	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
 	mkdir -p $(@D) ; \
@@ -147,23 +174,23 @@ clean : cleanpng cleantiff cleanjpeg
 .PHONY : cleanpng
 cleanpng :
 	for folder in $(realpath $(libpngfolders_all) ); do \
-				cd $$folder; \
-				$(MAKE) clean; \
+		cd $$folder; \
+		$(MAKE) clean; \
 	done
 
 .PHONY : cleanjpeg
 cleanjpeg :
 	for folder in $(realpath $(libjpegfolders_all) ); do \
-				cd $$folder; \
-				$(MAKE) clean; \
+		cd $$folder; \
+		$(MAKE) clean; \
 	done
 
 .PHONY : cleantiff
 cleantiff :
 	for folder in $(realpath $(libtifffolders_all) ); do \
-				cd $$folder; \
-				$(MAKE) clean; \
-		done
+		cd $$folder; \
+		$(MAKE) clean; \
+	done
 
 .PHONY : mostlyclean
 mostlyclean : mostlycleanpng mostlycleantiff mostlycleanjpeg
@@ -171,23 +198,23 @@ mostlyclean : mostlycleanpng mostlycleantiff mostlycleanjpeg
 .PHONY : mostlycleanpng
 mostlycleanpng :
 	for folder in $(realpath $(libpngfolders) ); do \
-				cd $$folder; \
-				$(MAKE) mostlyclean; \
-		done
+		cd $$folder; \
+		$(MAKE) mostlyclean; \
+	done
 
 .PHONY : mostlycleantiff
 mostlycleantiff :
 	for folder in $(realpath $(libtifffolders_all) ); do \
-				cd $$folder; \
-				$(MAKE) mostlyclean; \
+		cd $$folder; \
+		$(MAKE) mostlyclean; \
 	done
 
 .PHONY : mostlycleanjpeg
 mostlycleanjpeg :
 	for folder in $(realpath $(libjpegfolders_all) ); do \
-				cd $$folder; \
-				$(MAKE) mostlyclean; \
-		done
+		cd $$folder; \
+		$(MAKE) mostlyclean; \
+	done
 
 .PHONY : distclean
 distclean :
