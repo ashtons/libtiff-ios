@@ -23,6 +23,9 @@ libtiffconfig = $(TIFF_SRC)/configure
 index = $(words $(shell a="$(2)";echo $${a/$(1)*/$(1)} ))
 swap  = $(word $(call index,$(1),$(2)),$(3))
 
+# platform specific config
+#
+# make platform=ios
 ifeq ($(platform), ios)
 	PLATFORM_PREFIX=ios
 	SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
@@ -33,6 +36,7 @@ ifeq ($(platform), ios)
 	sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH) $(SDK_IPHONESIMULATOR_PATH)
 	archs_all = armv7 armv7s arm64 i386 x86_64
 	arch_names_all = arm-apple-darwin7 arm-apple-darwin7s arm-apple-darwin64 i386-apple-darwin x86_64-apple-darwin
+# make platform=macos
 else ifeq ($(platform), macos)
 	PLATFORM_PREFIX=macos
 	SDK_MACOS_PATH=$(shell xcrun --sdk macosx --show-sdk-path)
@@ -42,12 +46,12 @@ else ifeq ($(platform), macos)
 	sdks = $(SDK_MACOS_PATH) $(SDK_MACOS_PATH)
 	archs_all = i386 x86_64
 	arch_names_all = i386-apple-darwin x86_64-apple-darwin
+# make platform=all
 else ifeq ($(platform), all)
 	# we will call make for all platforms, so nothing to do for now
 endif
 
 # TODO: Maybe swap dependencies and PLATFORM_PREFIX
-# TODO: What is random lib directory inside dependencies
 # TODO: Remove ios and macos directories
 IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
 IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
