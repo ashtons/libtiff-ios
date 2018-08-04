@@ -51,10 +51,9 @@ else ifeq ($(platform), all)
 	# we will call make for all platforms, so nothing to do for now
 endif
 
-# TODO: Maybe swap dependencies and PLATFORM_PREFIX
-# TODO: Remove ios and macos directories
-IMAGE_LIB_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/lib/
-IMAGE_INC_DIR = $(shell pwd)/dependencies/$(PLATFORM_PREFIX)/include/
+# TODO: Maybe dependencies dir can be removed as it's unnecessary scoping
+IMAGE_LIB_DIR = $(shell pwd)/$(PLATFORM_PREFIX)/dependencies/lib/
+IMAGE_INC_DIR = $(shell pwd)/$(PLATFORM_PREFIX)/dependencies/include/
 
 arch_names = $(foreach arch, $(ARCHS), $(call swap, $(arch), $(archs_all), $(arch_names_all) ) )
 ARCHS ?= $(archs_all)
