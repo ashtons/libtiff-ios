@@ -1,7 +1,7 @@
 PNG_NAME        := libpng-1.6.34
 JPEG_SRC_NAME   := jpegsrc.v9a# filename at the server
 JPEG_DIR_NAME   := jpeg-9a# folder name after the JPEG_SRC_NAME archive has been unpacked
-TIFF_NAME       := tiff-4.0.8
+TIFF_NAME       := tiff-4.0.9
 
 SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
 SDK_IPHONESIMULATOR_PATH=$(shell xcrun --sdk iphonesimulator --show-sdk-path)
@@ -136,7 +136,7 @@ $(libjpegconfig) :
 	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
 
 $(libpngconfig) :
-	curl https://ftp-osl.osuosl.org//pub/libpng/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
+	curl https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
 
 #######################
 # Clean
