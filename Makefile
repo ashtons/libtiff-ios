@@ -1,8 +1,8 @@
-PNG_NAME        := libpng-1.6.34
+PNG_NAME        := libpng-1.6.36
 JPEG_SRC_NAME   := jpegsrc.v9c
 # folder name after the JPEG_SRC_NAME archive has been unpacked
 JPEG_DIR_NAME   := jpeg-9c
-TIFF_NAME       := tiff-4.0.9
+TIFF_NAME       := tiff-4.0.10
 
 XCODE_DEVELOPER_PATH="`xcode-select -p`"
 XCODETOOLCHAIN_PATH=$(XCODE_DEVELOPER_PATH)/Toolchains/XcodeDefault.xctoolchain
@@ -33,9 +33,9 @@ ifeq ($(platform), ios)
 	IOS_DEPLOY_TGT="8.0"
 	PLATFORM_VERSION_MIN=iphoneos-version-min=$(IOS_DEPLOY_TGT)
 
-	sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH) $(SDK_IPHONESIMULATOR_PATH)
-	archs_all = armv7 armv7s arm64 i386 x86_64
-	arch_names_all = arm-apple-darwin7 arm-apple-darwin7s arm-apple-darwin64 i386-apple-darwin x86_64-apple-darwin
+	sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH)
+	archs_all = arm64 x86_64
+	arch_names_all = arm-apple-darwin64 x86_64-apple-darwin
 # make platform=macos
 else ifeq ($(platform), macos)
 	PLATFORM_PREFIX=macos
@@ -43,9 +43,9 @@ else ifeq ($(platform), macos)
 	MACOS_DEPLOY_TGT="10.13"
 	PLATFORM_VERSION_MIN=macosx-version-min=$(MACOS_DEPLOY_TGT)
 
-	sdks = $(SDK_MACOS_PATH) $(SDK_MACOS_PATH)
-	archs_all = i386 x86_64
-	arch_names_all = i386-apple-darwin x86_64-apple-darwin
+	sdks = $(SDK_MACOS_PATH)
+	archs_all = x86_64
+	arch_names_all = x86_64-apple-darwin
 # make platform=all
 else ifeq ($(platform), all)
 	# we will call make for all platforms, so nothing to do for now
@@ -74,9 +74,9 @@ libpngfat  = $(addprefix $(IMAGE_LIB_DIR), $(libpngfiles))
 libjpegfat = $(addprefix $(IMAGE_LIB_DIR), $(libjpegfiles))
 libtifffat = $(addprefix $(IMAGE_LIB_DIR), $(libtifffiles))
 
-libpng     = $(foreach folder, $(libpngfolders), $(addprefix $(folder)/lib/, $(libpngfiles)) )
-libjpeg    = $(foreach folder, $(libjpegfolders), $(addprefix $(folder)/lib/, $(libjpegfiles)) )
-libtiff    = $(foreach folder, $(libtifffolders), $(addprefix $(folder)/lib/, $(libtifffiles)) )
+libpng     = $(foreach folder, $(libpngfolders), $(addprefix $(folder)lib/, $(libpngfiles)) )
+libjpeg    = $(foreach folder, $(libjpegfolders), $(addprefix $(folder)lib/, $(libjpegfiles)) )
+libtiff    = $(foreach folder, $(libtifffolders), $(addprefix $(folder)lib/, $(libtifffiles)) )
 
 dependant_libs = libpng libjpeg libtiff
 
@@ -99,7 +99,7 @@ $(libtifffat) : $(libtiff)
 	mkdir -p $(@D)
 	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libtifffolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
-	cp -rvf $(firstword $(libtifffolders))/include/*.h $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libtifffolders))include/*.h $(IMAGE_INC_DIR)
 
 $(libtiff) :  $(libtiffmakefile)
 	cd $(abspath $(@D)/..) ; \
@@ -120,7 +120,7 @@ $(libpngfat) : $(libpng)
 	mkdir -p $(@D)
 	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libpngfolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
-	cp -rvf $(firstword $(libpngfolders))/include/*.h $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libpngfolders))include/*.h $(IMAGE_INC_DIR)
 
 $(libpng) : $(libpngmakefile)
 	cd $(abspath $(@D)/..) ; \
@@ -141,7 +141,7 @@ $(libjpegfat) : $(libjpeg)
 	mkdir -p $(@D)
 	xcrun lipo $(realpath $(addsuffix lib/$(@F), $(libjpegfolders_all)) ) -create -output $@
 	mkdir -p $(IMAGE_INC_DIR)
-	cp -rvf $(firstword $(libjpegfolders))/include/*.h $(IMAGE_INC_DIR)
+	cp -rvf $(firstword $(libjpegfolders))include/*.h $(IMAGE_INC_DIR)
 
 $(libjpeg) : $(libjpegmakefile)
 	cd $(abspath $(@D)/..) ; \
@@ -166,7 +166,7 @@ $(libjpegconfig) :
 	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
 
 $(libpngconfig) :
-	curl ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$(PNG_NAME).tar.gz | tar -xpf-
+	curl -L https://downloads.sourceforge.net/project/libpng/libpng16/1.6.36/libpng-1.6.36.tar.gz | tar -xpf-
 
 #######################
 # Clean
