@@ -1,11 +1,15 @@
-PNG_NAME        := libpng-1.6.36
+PNG_VERSION     := 1.6.36
+PNG_NAME        := libpng-$(PNG_VERSION)
 JPEG_SRC_NAME   := jpegsrc.v9c
 # folder name after the JPEG_SRC_NAME archive has been unpacked
 JPEG_DIR_NAME   := jpeg-9c
 TIFF_NAME       := tiff-4.0.10
 
 XCODE_DEVELOPER_PATH="`xcode-select -p`"
-XCODETOOLCHAIN_PATH=$(XCODE_DEVELOPER_PATH)/Toolchains/XcodeDefault.xctoolchain
+XCODE_DEVELOPER_PATH_BIN=$(XCODE_DEVELOPER_PATH)/usr/bin
+TARGET_CXX="$(XCODE_DEVELOPER_PATH_BIN)/g++"
+TARGET_CXX_FOR_BUILD="$(XCODE_DEVELOPER_PATH_BIN)/g++"
+TARGET_CC="$(XCODE_DEVELOPER_PATH_BIN)/gcc"
 
 IMAGE_SRC = $(shell pwd)
 PNG_SRC   = $(IMAGE_SRC)/$(PNG_NAME)
@@ -30,10 +34,10 @@ ifeq ($(platform), ios)
 	PLATFORM_PREFIX=ios
 	SDK_IPHONEOS_PATH=$(shell xcrun --sdk iphoneos --show-sdk-path)
 	SDK_IPHONESIMULATOR_PATH=$(shell xcrun --sdk iphonesimulator --show-sdk-path)
-	IOS_DEPLOY_TGT="10.0"
-	PLATFORM_VERSION_MIN=iphoneos-version-min=$(IOS_DEPLOY_TGT)
+	IOS_DEPLOY_TGT="11.0"
 
 	sdks = $(SDK_IPHONEOS_PATH) $(SDK_IPHONESIMULATOR_PATH)
+	platform_version_mins = iphoneos-version-min=$(IOS_DEPLOY_TGT) ios-simulator-version-min=$(IOS_DEPLOY_TGT)
 	archs_all = arm64 x86_64
 	arch_names_all = arm-apple-darwin64 x86_64-apple-darwin
 # make platform=macos
@@ -41,9 +45,9 @@ else ifeq ($(platform), macos)
 	PLATFORM_PREFIX=macos
 	SDK_MACOS_PATH=$(shell xcrun --sdk macosx --show-sdk-path)
 	MACOS_DEPLOY_TGT="10.13"
-	PLATFORM_VERSION_MIN=macosx-version-min=$(MACOS_DEPLOY_TGT)
 
 	sdks = $(SDK_MACOS_PATH)
+	platform_version_mins = macosx-version-min=$(MACOS_DEPLOY_TGT)
 	archs_all = x86_64
 	arch_names_all = x86_64-apple-darwin
 # make platform=all
@@ -80,6 +84,8 @@ libtiff    = $(foreach folder, $(libtifffolders), $(addprefix $(folder)lib/, $(l
 
 dependant_libs = libpng libjpeg libtiff
 
+common_cflags = -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(call swap, $*, $(arch_names_all), $(platform_version_mins)) -O2 -fembed-bitcode
+
 ifneq (,$(filter $(platform),ios macos))
 .PHONY : all
 all : $(dependant_libs)
@@ -107,12 +113,13 @@ $(libtiff) :  $(libtiffmakefile)
 
 $(TIFF_SRC)/%/Makefile : $(libtiffconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
+	export CFLAGS="$(common_cflags)" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	export LDFLAGS="-L$$SDKROOT/usr/lib/" ; \
 	mkdir -p $(@D) ; \
 	cd $(@D) ; \
-	../configure --host=$* --enable-fast-install --enable-shared=no --prefix=`pwd` --without-x --with-jpeg-include-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/include) --with-jpeg-lib-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/lib)
+	../configure CXX="$(TARGET_CXX) --target=$*" CC="$(TARGET_CC) --target=$*" --host=$* --enable-fast-install --enable-shared=no --prefix=`pwd` --without-x --with-jpeg-include-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/include) --with-jpeg-lib-dir=$(abspath $(@D)/../../$(JPEG_DIR_NAME)/$*/lib)
 
 libpng : $(libpngfat)
 
@@ -128,12 +135,13 @@ $(libpng) : $(libpngmakefile)
 
 $(PNG_SRC)/%/Makefile : $(libpngconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
+	export CFLAGS="$(common_cflags)" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	export LDFLAGS="-L$$SDKROOT/usr/lib/" ; \
 	mkdir -p $(@D) ; \
 	cd $(@D) ; \
-	../configure --host=$* --enable-shared=no --prefix=`pwd`
+	../configure CXX="$(TARGET_CXX) --target=$*" CC="$(TARGET_CC) --target=$*" --host=$* --enable-shared=no --prefix=`pwd`
 
 libjpeg : $(libjpegfat)
 
@@ -149,12 +157,13 @@ $(libjpeg) : $(libjpegmakefile)
 
 $(JPEG_SRC)/%/Makefile : $(libjpegconfig)
 	export SDKROOT="$(call swap, $*, $(arch_names_all), $(sdks))" ; \
-	export CFLAGS="-Qunused-arguments -arch $(call swap, $*, $(arch_names_all), $(archs_all)) -pipe -no-cpp-precomp -isysroot $$SDKROOT -m$(PLATFORM_VERSION_MIN) -O2 -fembed-bitcode" ; \
+	export CFLAGS="$(common_cflags)" ; \
 	export CPPFLAGS=$$CFLAGS ; \
 	export CXXFLAGS="$$CFLAGS -Wno-deprecated-register"; \
+	export LDFLAGS="-L$$SDKROOT/usr/lib/" ; \
 	mkdir -p $(@D) ; \
 	cd $(@D) ; \
-	../configure --host=$* --enable-shared=no --prefix=`pwd`
+	../configure CXX="$(TARGET_CXX) --target=$*" CC="$(TARGET_CC) --target=$*" --host=$* --enable-shared=no --prefix=`pwd`
 
 #######################
 # Download sources
@@ -166,7 +175,7 @@ $(libjpegconfig) :
 	curl http://www.ijg.org/files/$(JPEG_SRC_NAME).tar.gz | tar -xpf-
 
 $(libpngconfig) :
-	curl -L https://downloads.sourceforge.net/project/libpng/libpng16/1.6.36/libpng-1.6.36.tar.gz | tar -xpf-
+	curl -L https://downloads.sourceforge.net/project/libpng/libpng16/$(PNG_VERSION)/$(PNG_NAME).tar.gz | tar -xpf-
 
 #######################
 # Clean
