@@ -25,7 +25,7 @@ It's much easier now to update to a any (new or old) versions of library: just c
     PNG_NAME        = libpng-1.6.37
     JPEG_SRC_NAME   = jpegsrc.v9d# filename at the server
     JPEG_DIR_NAME   = jpeg-9d# folder name after the JPEG_SRC_NAME archive has been unpacked
-    TIFF_NAME       = tiff-4.2.0
+    TIFF_NAME       = tiff-4.3.0
 
 
 Location for the XCode version to use is identified using
