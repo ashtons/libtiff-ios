@@ -1,4 +1,4 @@
-PNG_VERSION     := 1.6.37
+PNG_VERSION     := 1.6.38
 PNG_NAME        := libpng-$(PNG_VERSION)
 JPEG_SRC_NAME   := jpegsrc.v9d
 # folder name after the JPEG_SRC_NAME archive has been unpacked
