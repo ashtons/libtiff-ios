@@ -48,8 +48,8 @@ else ifeq ($(platform), macos)
 
 	sdks = $(SDK_MACOS_PATH)
 	platform_version_mins = macosx-version-min=$(MACOS_DEPLOY_TGT)
-	archs_all = x86_64
-	arch_names_all = x86_64-apple-darwin
+	archs_all = x86_64 arm64
+	arch_names_all = x86_64-apple-darwin arm64-apple-darwin
 # make platform=all
 else ifeq ($(platform), all)
 	# we will call make for all platforms, so nothing to do for now
@@ -93,7 +93,7 @@ else
 .PHONY : all
 all :
 	$(MAKE) platform=ios
-	$(MAKE) platform=macos
+	$(MAKE) platform=macos	
 endif
 
 #######################
