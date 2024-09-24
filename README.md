@@ -22,10 +22,10 @@ By default every "fat" library will contain all architectures specified above. S
 
 It's much easier now to update to a any (new or old) versions of library: just change a corresponding version numbers in the beginning of the make file:
 
-    PNG_NAME        = libpng-1.6.42
+    PNG_NAME        = libpng-1.6.44
     JPEG_SRC_NAME   = jpegsrc.v9f# filename at the server
     JPEG_DIR_NAME   = jpeg-9f# folder name after the JPEG_SRC_NAME archive has been unpacked
-    TIFF_NAME       = tiff-4.6.0
+    TIFF_NAME       = tiff-4.7.0
 
 
 Location for the XCode version to use is identified using
