@@ -1,8 +1,8 @@
 PNG_VERSION     := 1.6.58
 PNG_NAME        := libpng-$(PNG_VERSION)
-JPEG_SRC_NAME   := jpegsrc.v9f
+JPEG_SRC_NAME   := jpegsrc.v10
 # folder name after the JPEG_SRC_NAME archive has been unpacked
-JPEG_DIR_NAME   := jpeg-9f
+JPEG_DIR_NAME   := jpeg-10
 TIFF_NAME       := tiff-4.7.1
 
 XCODE_DEVELOPER_PATH="`xcode-select -p`"
